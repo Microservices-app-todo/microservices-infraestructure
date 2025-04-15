@@ -75,6 +75,6 @@ jobs:
             gh secret set DOCKER_PASSWORD -b "${{ env.DOCKER_PASSWORD }}" --repo "Microservices-app-todo/$repo"
           done
       - name: Trigger pipeline in another repository using gh CLI
-            run: |
-              gh workflow run deploy.yml -f ref=develop -r Microservices-app-todo/microservices-log-message-processor -t ${{ secrets.GH_PAT }}
+        run: |
+          gh workflow run deploy.yml -f ref=develop -r Microservices-app-todo/microservices-log-message-processor -t ${{ secrets.GH_PAT }}
 

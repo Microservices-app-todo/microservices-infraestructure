@@ -1,4 +1,4 @@
-name: Update Secrets in Org Repository
+name: Deploy infrastructure
 
 on:
   push:

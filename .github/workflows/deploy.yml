@@ -12,10 +12,17 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: 1.5.0
+
+      - name: Set AWS Credentials
+        run: |
+          echo "AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}" >> $GITHUB_ENV
+          echo "AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> $GITHUB_ENV
+          echo "AWS_DEFAULT_REGION=${{ secrets.AWS_DEFAULT_REGION }}" >> $GITHUB_ENV
 
       - name: Terraform Init
         working-directory: terraform/microservices
@@ -23,7 +30,7 @@ jobs:
 
       - name: Terraform Apply
         working-directory: terraform/microservices
-        run: terraform apply -auto-approve -var="subscription_id=4aacf319-cc4f-4aa3-a3f8-71d4c1e63bdb"
+        run: terraform apply -auto-approve -var="subscription_id=${{ secrets.SUBSCRIPTION_ID }}"
 
       - name: Get Terraform Outputs
         id: tf_outputs
@@ -35,7 +42,6 @@ jobs:
           echo "container_app_environment_id=$(terraform output -raw container_app_environment_id)" >> $GITHUB_OUTPUT
           echo "identity_id=$(terraform output -raw identity_id)" >> $GITHUB_OUTPUT
 
-
       - name: Install GitHub CLI
         run: sudo apt-get install gh -y
 
@@ -45,14 +51,12 @@ jobs:
       - name: Get Terraform outputs
         id: terraform-outputs
         run: |
-          # Ejemplo para obtener los outputs de Terraform (ajusta según tu setup)
           echo "ACR_NAME=$(terraform output -raw acr_name)" >> $GITHUB_ENV
           echo "DOCKER_USERNAME=$(terraform output -raw acr_admin_username)" >> $GITHUB_ENV
           echo "DOCKER_PASSWORD=$(terraform output -raw acr_admin_password)" >> $GITHUB_ENV
 
-      - name: Update Secrets in Organization Repo
+      - name: Set Organization Secrets
         run: |
-          # Cambiar los secretos en el repositorio de la organización
           gh secret set ACR_NAME -b"${{ env.ACR_NAME }}" --repo Microservices-app-todo/microservices-log-message-processor
           gh secret set DOCKER_USERNAME -b"${{ env.DOCKER_USERNAME }}" --repo Microservices-app-todo/microservices-log-message-processor
           gh secret set DOCKER_PASSWORD -b"${{ env.DOCKER_PASSWORD }}" --repo Microservices-app-todo/microservices-log-message-processor

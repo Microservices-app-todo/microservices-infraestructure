@@ -5,7 +5,7 @@ module "aca_apps" {
     nginx = {
       container_app_name = "nginx"
       container_name     = "nginx"
-      image              = "${var.acr_login_server}/nginx:latest"
+      image              = "nginx:latest"
       cpu                = 0.5
       memory             = "1.0Gi"
       env_variables      = {}
@@ -14,7 +14,7 @@ module "aca_apps" {
     zipkin = {
       container_app_name = "zipkin"
       container_name     = "zipkin"
-      image              = "${var.acr_login_server}/zipkin:latest"
+      image              = "openzipkin/zipkin:latest"
       cpu                = 0.5
       memory             = "1.0Gi"
       env_variables      = {}

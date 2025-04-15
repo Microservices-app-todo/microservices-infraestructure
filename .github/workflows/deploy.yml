@@ -3,7 +3,7 @@ name: Update Secrets in Org Repository
 on:
   push:
     branches:
-      - feature/acr-github
+      - develop
 
 jobs:
   update-secrets:

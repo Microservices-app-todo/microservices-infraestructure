@@ -95,10 +95,10 @@ jobs:
             # Small delay to allow the run to register
             sleep 5
 
-            # Get the latest run ID for deploy.yml
+            # Get the latest run ID for build.yml
             run_id=$(gh run list \
               --repo Microservices-app-todo/$repo \
-              --workflow=deploy.yml \
+              --workflow=build.yml \
               --branch=develop \
               --limit 1 \
               --json databaseId \

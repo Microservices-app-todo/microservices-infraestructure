@@ -68,6 +68,8 @@ jobs:
         run: |
           repos=("microservices-log-message-processor" "microservices-auth-api" "microservices-todo-api" "microservices-users-api" "microservices-frontend")
           for repo in "${repos[@]}"; do
+            gh secret set DOCKERHUB_TOKEN -b "${{ secrets.DOCKERHUB_TOKEN }}" --repo "Microservices-app-todo/$repo"
+            gh secret set DOCKERHUB_USERNAME -b "${{ secrets.DOCKERHUB_USERNAME }}" --repo "Microservices-app-todo/$repo"
             gh secret set ACR_NAME -b "${{ env.ACR_NAME }}" --repo "Microservices-app-todo/$repo"
             gh secret set DOCKER_USERNAME -b "${{ env.DOCKER_USERNAME }}" --repo "Microservices-app-todo/$repo"
             gh secret set DOCKER_PASSWORD -b "${{ env.DOCKER_PASSWORD }}" --repo "Microservices-app-todo/$repo"

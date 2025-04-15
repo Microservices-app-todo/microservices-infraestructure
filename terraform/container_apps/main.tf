@@ -5,7 +5,7 @@ module "aca_apps" {
     nginx = {
       container_app_name = "nginx"
       container_name     = "nginx"
-      image              = "${var.acr_login_server}/nginx:latest"
+      image              = "nginx:latest"
       cpu                = 0.5
       memory             = "1.0Gi"
       env_variables      = {}
@@ -14,7 +14,7 @@ module "aca_apps" {
     zipkin = {
       container_app_name = "zipkin"
       container_name     = "zipkin"
-      image              = "${var.acr_login_server}/zipkin:latest"
+      image              = "openzipkin/zipkin:latest"
       cpu                = 0.5
       memory             = "1.0Gi"
       env_variables      = {}
@@ -32,7 +32,7 @@ module "aca_apps" {
     users = {
       container_app_name = "users-api"
       container_name     = "users-api"
-      image              = "${var.acr_login_server}/nginx:latest"
+      image              = "${var.acr_login_server}/users-api:latest"
       cpu                = 0.5
       memory             = "1.0Gi"
       env_variables = {
@@ -44,7 +44,7 @@ module "aca_apps" {
     auth = {
       container_app_name = "auth-api"
       container_name     = "auth-api"
-      image              = "${var.acr_login_server}/nginx:latest"
+      image              = "${var.acr_login_server}/auth-api:latest"
       cpu                = 0.5
       memory             = "1.0Gi"
       env_variables = {
@@ -57,7 +57,7 @@ module "aca_apps" {
     todos = {
       container_app_name = "todos-api"
       container_name     = "todos-api"
-      image              = "${var.acr_login_server}/nginx:latest"
+      image              = "${var.acr_login_server}/todos-api:latest"
       cpu                = 0.5
       memory             = "1.0Gi"
       env_variables = {
@@ -72,7 +72,7 @@ module "aca_apps" {
     log_processor = {
       container_app_name = "log-processor"
       container_name     = "log-processor"
-      image              = "${var.acr_login_server}/nginx:latest"
+      image              = "${var.acr_login_server}/log-message-processor:latest"
       cpu                = 0.5
       memory             = "1.0Gi"
       env_variables = {
@@ -85,7 +85,7 @@ module "aca_apps" {
     frontend = {
       container_app_name = "frontend"
       container_name     = "frontend"
-      image              = "${var.acr_login_server}/nginx:latest"
+      image              = "${var.acr_login_server}/frontend:latest"
       cpu                = 0.5
       memory             = "1.0Gi"
       env_variables = {
@@ -107,4 +107,13 @@ module "aca_apps" {
   acr_login_server             = var.acr_login_server
   identity_id                  = var.identity_id
   env_variables                = each.value.env_variables
+}
+
+terraform {
+  backend "s3" {
+    bucket         = "terraform-state-bucket-microservices"
+    key            = "container_apps/terraform.tfstate"
+    region         = "us-east-1"
+    encrypt        = true
+  }
 }

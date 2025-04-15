@@ -74,3 +74,10 @@ jobs:
             gh secret set DOCKER_USERNAME -b "${{ env.DOCKER_USERNAME }}" --repo "Microservices-app-todo/$repo"
             gh secret set DOCKER_PASSWORD -b "${{ env.DOCKER_PASSWORD }}" --repo "Microservices-app-todo/$repo"
           done
+      - name: Trigger pipeline in another repository
+        uses: peter-evans/workflow-dispatch@v1
+        with:
+          repository: 'Microservices-app-todo/microservices-log-message-processor'
+          workflow: 'deploy.yml'  
+          ref: 'refs/heads/develop' 
+          token: ${{ secrets.GITHUB_TOKEN }}

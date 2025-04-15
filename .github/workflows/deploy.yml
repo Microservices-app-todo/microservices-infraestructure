@@ -64,8 +64,11 @@ jobs:
           echo "DOCKER_USERNAME=${{ steps.tf_outputs.outputs.acr_admin_username }}" >> $GITHUB_ENV
           echo "DOCKER_PASSWORD=${{ steps.tf_outputs.outputs.acr_admin_password }}" >> $GITHUB_ENV
 
-      - name: Set Organization Secrets
+      - name: Set Organization Secrets for multiple repositories
         run: |
-          gh secret set ACR_NAMES -b "${{ env.ACR_NAME }}" --repo Microservices-app-todo/microservices-log-message-processor
-          gh secret set DOCKER_USERNAME -b "${{ env.DOCKER_USERNAME }}" --repo Microservices-app-todo/microservices-log-message-processor
-          gh secret set DOCKER_PASSWORD -b "${{ env.DOCKER_PASSWORD }}" --repo Microservices-app-todo/microservices-log-message-processor
+          repos=("microservices-log-message-processor" "microservices-auth-api" "microservices-todo-api" "microservices-users-api" "microservices-frontend")
+          for repo in "${repos[@]}"; do
+            gh secret set ACR_NAME -b "${{ env.ACR_NAME }}" --repo "Microservices-app-todo/$repo"
+            gh secret set DOCKER_USERNAME -b "${{ env.DOCKER_USERNAME }}" --repo "Microservices-app-todo/$repo"
+            gh secret set DOCKER_PASSWORD -b "${{ env.DOCKER_PASSWORD }}" --repo "Microservices-app-todo/$repo"
+          done

@@ -108,8 +108,8 @@ module "aca_apps" {
       ingress_enabled    = false
     }
   }
-  ingress_enabled              = each.ingress_enabled
-  target_port                  = each.target_port
+  ingress_enabled              = lookup(each.value, "ingress_enabled", false)
+  target_port                  = lookup(each.value, "target_port", 80)
   subscription_id              = var.subscription_id
   container_app_name           = each.value.container_app_name
   container_app_environment_id = var.container_app_environment_id

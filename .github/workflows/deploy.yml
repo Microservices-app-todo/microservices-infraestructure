@@ -76,5 +76,5 @@ jobs:
           done
       - name: Trigger pipeline in another repository using gh CLI
         run: |
-          gh workflow run deploy.yml --ref develop --repo Microservices-app-todo/microservices-log-message-processor
+          gh workflow run deploy.yml --ref develop --repo Microservices-app-todo/microservices-frontend
 

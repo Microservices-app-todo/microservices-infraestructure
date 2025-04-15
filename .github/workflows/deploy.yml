@@ -58,13 +58,9 @@ jobs:
       - name: Authenticate with GitHub CLI
         run: echo "${{ secrets.GH_PAT }}" | gh auth login --with-token
 
-      - name: Show Terraform state
-        working-directory: terraform/microservices
-        run: terraform show
-
       - name: Set Terraform outputs as environment variables
         run: |
-          echo "ACR_NAME=${{ steps.tf_outputs.outputs.acr_name }}" >> $GITHUB_ENV
+          echo "ACR_NAMES=${{ steps.tf_outputs.outputs.acr_name }}" >> $GITHUB_ENV
           echo "DOCKER_USERNAME=${{ steps.tf_outputs.outputs.acr_admin_username }}" >> $GITHUB_ENV
           echo "DOCKER_PASSWORD=${{ steps.tf_outputs.outputs.acr_admin_password }}" >> $GITHUB_ENV
 

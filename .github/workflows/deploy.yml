@@ -45,6 +45,8 @@ jobs:
         working-directory: terraform/microservices
         run: |
           echo "acr_name=$(terraform output -raw acr_name)" >> $GITHUB_OUTPUT
+          echo "acr_admin_username=$(terraform output -raw acr_admin_username)" >> $GITHUB_OUTPUT
+          echo "acr_admin_password=$(terraform output -raw acr_admin_password)" >> $GITHUB_OUTPUT
           echo "acr_login_server=$(terraform output -raw acr_login_server)" >> $GITHUB_OUTPUT
           echo "resource_group_name=$(terraform output -raw resource_group_name)" >> $GITHUB_OUTPUT
           echo "container_app_environment_id=$(terraform output -raw container_app_environment_id)" >> $GITHUB_OUTPUT
@@ -68,6 +70,6 @@ jobs:
 
       - name: Set Organization Secrets
         run: |
-          gh secret set ACR_NAME -b"${{ env.ACR_NAME }}" --repo Microservices-app-todo/microservices-log-message-processor
-          gh secret set DOCKER_USERNAME -b"${{ env.DOCKER_USERNAME }}" --repo Microservices-app-todo/microservices-log-message-processor
-          gh secret set DOCKER_PASSWORD -b"${{ env.DOCKER_PASSWORD }}" --repo Microservices-app-todo/microservices-log-message-processor
+          gh secret set ACR_NAME -b "${{ env.ACR_NAME }}" --repo Microservices-app-todo/microservices-log-message-processor
+          gh secret set DOCKER_USERNAME -b "${{ env.DOCKER_USERNAME }}" --repo Microservices-app-todo/microservices-log-message-processor
+          gh secret set DOCKER_PASSWORD -b "${{ env.DOCKER_PASSWORD }}" --repo Microservices-app-todo/microservices-log-message-processor

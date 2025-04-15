@@ -32,7 +32,7 @@ module "aca_apps" {
     users = {
       container_app_name = "users-api"
       container_name     = "users-api"
-      image              = "${var.acr_login_server}/nginx:latest"
+      image              = "${var.acr_login_server}/users-api:latest"
       cpu                = 0.5
       memory             = "1.0Gi"
       env_variables = {
@@ -44,7 +44,7 @@ module "aca_apps" {
     auth = {
       container_app_name = "auth-api"
       container_name     = "auth-api"
-      image              = "${var.acr_login_server}/nginx:latest"
+      image              = "${var.acr_login_server}/auth-api:latest"
       cpu                = 0.5
       memory             = "1.0Gi"
       env_variables = {
@@ -57,7 +57,7 @@ module "aca_apps" {
     todos = {
       container_app_name = "todos-api"
       container_name     = "todos-api"
-      image              = "${var.acr_login_server}/nginx:latest"
+      image              = "${var.acr_login_server}/todos-api:latest"
       cpu                = 0.5
       memory             = "1.0Gi"
       env_variables = {
@@ -72,7 +72,7 @@ module "aca_apps" {
     log_processor = {
       container_app_name = "log-processor"
       container_name     = "log-processor"
-      image              = "${var.acr_login_server}/nginx:latest"
+      image              = "${var.acr_login_server}/log-message-processor:latest"
       cpu                = 0.5
       memory             = "1.0Gi"
       env_variables = {
@@ -85,7 +85,7 @@ module "aca_apps" {
     frontend = {
       container_app_name = "frontend"
       container_name     = "frontend"
-      image              = "${var.acr_login_server}/nginx:latest"
+      image              = "${var.acr_login_server}/frontend:latest"
       cpu                = 0.5
       memory             = "1.0Gi"
       env_variables = {

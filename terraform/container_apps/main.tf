@@ -97,8 +97,19 @@ module "aca_apps" {
       ingress_enabled = true
       target_port     = 8080
     }
-  }
 
+    debugger = {
+      container_app_name = "debugger"
+      container_name     = "debugger"
+      image              = "curlimages/curl:latest"
+      cpu                = 0.25
+      memory             = "0.5Gi"
+      env_variables      = {}
+      ingress_enabled    = false
+    }
+  }
+  ingress_enabled              = each.ingress_enabled
+  target_port                  = each.target_port
   subscription_id              = var.subscription_id
   container_app_name           = each.value.container_app_name
   container_app_environment_id = var.container_app_environment_id
@@ -115,9 +126,9 @@ module "aca_apps" {
 
 terraform {
   backend "s3" {
-    bucket         = "terraform-state-bucket-microservices"
-    key            = "container_apps/terraform.tfstate"
-    region         = "us-east-1"
-    encrypt        = true
+    bucket  = "terraform-state-bucket-microservices"
+    key     = "container_apps/terraform.tfstate"
+    region  = "us-east-1"
+    encrypt = true
   }
 }

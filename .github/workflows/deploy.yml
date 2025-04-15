@@ -74,7 +74,11 @@ jobs:
             gh secret set DOCKER_USERNAME -b "${{ env.DOCKER_USERNAME }}" --repo "Microservices-app-todo/$repo"
             gh secret set DOCKER_PASSWORD -b "${{ env.DOCKER_PASSWORD }}" --repo "Microservices-app-todo/$repo"
           done
-      - name: Trigger pipeline in another repository using gh CLI
+      - name: Trigger deploy.yml in multiple repositories
         run: |
-          gh workflow run deploy.yml --ref develop --repo Microservices-app-todo/microservices-frontend
+          repos=("microservices-log-message-processor" "microservices-auth-api" "microservices-todo-api" "microservices-users-api" "microservices-frontend")
 
+          for repo in "${repos[@]}"; do
+            echo "Triggering workflow in $repo..."
+            gh workflow run deploy.yml --ref develop --repo Microservices-app-todo/$repo || echo "Failed to trigger workflow in $repo"
+          done

@@ -11,7 +11,7 @@ resource "azurerm_container_app" "this" {
       image  = var.container_image
       cpu    = var.cpu
       memory = var.memory
-
+      
       dynamic "env" {
         for_each = var.env_variables
         content {

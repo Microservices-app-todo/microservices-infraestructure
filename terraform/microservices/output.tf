@@ -3,6 +3,18 @@ output "acr_login_server" {
   value       = azurerm_container_registry.microservices_acr.login_server
 }
 
+output "acr_admin_username" {
+  description = "Admin username for the Azure Container Registry"
+  value       = azurerm_container_registry.microservices_acr.admin_username
+  sensitive   = true
+}
+
+output "acr_admin_password" {
+  description = "Admin password for the Azure Container Registry"
+  value       = azurerm_container_registry.microservices_acr.admin_password
+  sensitive   = true
+}
+
 output "identity_id" {
   description = "User Assigned Identity ID"
   value       = azurerm_user_assigned_identity.aca_identity.id

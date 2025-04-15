@@ -74,11 +74,68 @@ jobs:
             gh secret set DOCKER_USERNAME -b "${{ env.DOCKER_USERNAME }}" --repo "Microservices-app-todo/$repo"
             gh secret set DOCKER_PASSWORD -b "${{ env.DOCKER_PASSWORD }}" --repo "Microservices-app-todo/$repo"
           done
-      - name: Trigger deploy.yml in multiple repositories
+      - name: Trigger workflows and wait for completion
         run: |
           repos=("microservices-log-message-processor" "microservices-auth-api" "microservices-todo-api" "microservices-users-api" "microservices-frontend")
+          declare -A run_ids
 
+          # Step 1: Trigger workflows and collect run IDs
           for repo in "${repos[@]}"; do
-            echo "Triggering workflow in $repo..."
-            gh workflow run deploy.yml --ref develop --repo Microservices-app-todo/$repo || echo "Failed to trigger workflow in $repo"
+            echo "🚀 Triggering deploy.yml in $repo..."
+            gh workflow run deploy.yml \
+              --ref develop \
+              --repo Microservices-app-todo/$repo
+
+            # Small delay to allow the run to register
+            sleep 5
+
+            # Get the latest run ID for deploy.yml
+            run_id=$(gh run list \
+              --repo Microservices-app-todo/$repo \
+              --workflow=deploy.yml \
+              --branch=develop \
+              --limit 1 \
+              --json databaseId \
+              --jq '.[0].databaseId')
+
+            if [[ -n "$run_id" ]]; then
+              run_ids[$repo]=$run_id
+              echo "✅ $repo run ID: $run_id"
+            else
+              echo "❌ Could not get run ID for $repo"
+            fi
           done
+
+          echo ""
+          echo "⏳ Waiting for workflows to complete..."
+          all_done=false
+
+          # Step 2: Poll until all runs are completed
+          while [ "$all_done" == "false" ]; do
+            all_done=true
+            for repo in "${!run_ids[@]}"; do
+              run_id=${run_ids[$repo]}
+              status=$(gh run view "$run_id" \
+                --repo Microservices-app-todo/$repo \
+                --json status,conclusion \
+                --jq '.status')
+
+              if [[ "$status" != "completed" ]]; then
+                echo "⏱️  $repo is still running..."
+                all_done=false
+              else
+                conclusion=$(gh run view "$run_id" \
+                  --repo Microservices-app-todo/$repo \
+                  --json status,conclusion \
+                  --jq '.conclusion')
+                echo "✅ $repo finished with status: $conclusion"
+              fi
+            done
+
+            if [ "$all_done" == "false" ]; then
+              echo "🔁 Waiting 15s before next check..."
+              sleep 15
+            fi
+          done
+
+          echo "🎉 All workflows completed."

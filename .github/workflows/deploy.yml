@@ -139,3 +139,10 @@ jobs:
           done
 
           echo "🎉 All workflows completed."
+      - name: Aca Terraform Init
+        working-directory: terraform/container_apps
+        run: terraform init
+
+      - name: Aca Terraform Apply
+        working-directory: terraform/container_apps
+        run: terraform apply -auto-approve -var="subscription_id=${{ secrets.AZURE_SUBSCRIPTION_ID }}" -var="tenant_id=${{ secrets.AZURE_TENANT_ID }}" -var="client_secret=${{ secrets.AZURE_CLIENT_SECRET }}" -var="client_id=${{ secrets.AZURE_CLIENT_ID }}" -var="acr_login_server=${{ steps.tf_outputs.outputs.acr_login_server }}" -var="resource_group_name=${{ steps.tf_outputs.outputs.resource_group_name }}" -var="container_app_environment_id=${{ steps.tf_outputs.outputs.container_app_environment_id }}" -var="identity_id=${{ steps.tf_outputs.outputs.identity_id }}"   

@@ -87,7 +87,7 @@ jobs:
 
           # Step 1: Trigger workflows and collect run IDs
           for repo in "${repos[@]}"; do
-            echo "🚀 Triggering deploy.yml in $repo..."
+            echo "🚀 Triggering build.yml in $repo..."
             gh workflow run build.yml \
               --ref develop \
               --repo Microservices-app-todo/$repo

@@ -25,6 +25,7 @@ jobs:
           echo "ARM_TENANT_ID=${{ secrets.AZURE_TENANT_ID }}" >> $GITHUB_ENV
           echo "ARM_SUBSCRIPTION_ID=${{ secrets.AZURE_SUBSCRIPTION_ID }}" >> $GITHUB_ENV
 
+
       - name: Set AWS Credentials
         run: |
           echo "AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}" >> $GITHUB_ENV
@@ -73,11 +74,3 @@ jobs:
             gh secret set DOCKER_USERNAME -b "${{ env.DOCKER_USERNAME }}" --repo "Microservices-app-todo/$repo"
             gh secret set DOCKER_PASSWORD -b "${{ env.DOCKER_PASSWORD }}" --repo "Microservices-app-todo/$repo"
           done
-      
-      - name: Trigger pipeline in another repository
-        uses: peter-evans/workflow-dispatch@v1
-        with:
-          repository: 'Microservices-app-todo/microservices-log-message-processor'
-          workflow: 'deploy.yml'  
-          ref: 'refs/heads/develop' 
-          token: ${{ secrets.GITHUB_TOKEN }}

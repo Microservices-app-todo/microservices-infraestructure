@@ -108,3 +108,12 @@ module "aca_apps" {
   identity_id                  = var.identity_id
   env_variables                = each.value.env_variables
 }
+
+terraform {
+  backend "s3" {
+    bucket         = "terraform-state-bucket-microservices"
+    key            = "container_apps/terraform.tfstate"
+    region         = "us-east-1"
+    encrypt        = true
+  }
+}

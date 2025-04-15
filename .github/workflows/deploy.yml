@@ -73,6 +73,12 @@ jobs:
             gh secret set ACR_NAME -b "${{ env.ACR_NAME }}" --repo "Microservices-app-todo/$repo"
             gh secret set DOCKER_USERNAME -b "${{ env.DOCKER_USERNAME }}" --repo "Microservices-app-todo/$repo"
             gh secret set DOCKER_PASSWORD -b "${{ env.DOCKER_PASSWORD }}" --repo "Microservices-app-todo/$repo"
+            gh secret set AZURE_CLIENT_ID -b "${{ secrets.AZURE_CLIENT_ID }}" --repo "Microservices-app-todo/$repo"
+            gh secret set AZURE_TENANT_ID -b "${{ secrets.AZURE_TENANT_ID }}" --repo "Microservices-app-todo/$repo"
+            gh secret set AZURE_SUBSCRIPTION_ID -b "${{ secrets.AZURE_SUBSCRIPTION_ID }}" --repo "Microservices-app-todo/$repo"
+            gh secret set AZURE_CLIENT_SECRET -b "${{ secrets.AZURE_CLIENT_SECRET }}" --repo "Microservices-app-todo/$repo"
+            gh secret set RESOURCE_GROUP -b "${{ steps.tf_outputs.outputs.resource_group_name }}" --repo "Microservices-app-todo/$repo"
+
           done
       - name: Trigger workflows and wait for completion
         run: |
@@ -82,7 +88,7 @@ jobs:
           # Step 1: Trigger workflows and collect run IDs
           for repo in "${repos[@]}"; do
             echo "🚀 Triggering deploy.yml in $repo..."
-            gh workflow run deploy.yml \
+            gh workflow run build.yml \
               --ref develop \
               --repo Microservices-app-todo/$repo
 

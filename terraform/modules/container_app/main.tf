@@ -31,4 +31,19 @@ resource "azurerm_container_app" "this" {
     type         = "UserAssigned"
     identity_ids = [var.identity_id]
   }
+
+  dynamic "ingress" {
+  for_each = var.ingress_enabled ? [1] : []
+  content {
+    external_enabled = true
+    target_port      = var.target_port
+    transport        = "auto"
+
+    traffic_weight {
+      percentage      = 100
+      latest_revision = true
+    }
+  }
+}
+
 }

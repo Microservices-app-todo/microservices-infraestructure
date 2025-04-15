@@ -60,3 +60,15 @@ variable "env_variables" {
   description = "Environment variables for the container."
   default     = {}
 }
+
+variable "ingress_enabled" {
+  description = "Whether ingress should be enabled for this container app"
+  type        = bool
+  default     = false
+}
+
+variable "target_port" {
+  description = "The port the app listens to inside the container"
+  type        = number
+  default     = 80
+}

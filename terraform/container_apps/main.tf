@@ -29,7 +29,7 @@ module "aca_apps" {
       env_variables      = {}
     }
 
-    users = {
+    users-api = {
       container_app_name = "users-api"
       container_name     = "users-api"
       image              = "${var.acr_login_server}/users-api:latest"
@@ -41,7 +41,7 @@ module "aca_apps" {
         "ZIPKIN_URL"  = "http://zipkin:9411"
       }
     }
-    auth = {
+    auth-api = {
       container_app_name = "auth-api"
       container_name     = "auth-api"
       image              = "${var.acr_login_server}/auth-api:latest"
@@ -54,7 +54,7 @@ module "aca_apps" {
         "ZIPKIN_URL"        = "http://zipkin:9411"
       }
     }
-    todos = {
+    todos-api = {
       container_app_name = "todos-api"
       container_name     = "todos-api"
       image              = "${var.acr_login_server}/todos-api:latest"
@@ -94,6 +94,8 @@ module "aca_apps" {
         "TODOS_API_ADDRESS" = "http://todos-api:8082"
         "ZIPKIN_URL"        = "http://zipkin:9411"
       }
+      ingress_enabled = true
+      target_port     = 8080
     }
   }
 
@@ -108,6 +110,8 @@ module "aca_apps" {
   identity_id                  = var.identity_id
   env_variables                = each.value.env_variables
 }
+
+
 
 terraform {
   backend "s3" {

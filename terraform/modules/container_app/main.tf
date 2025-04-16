@@ -17,6 +17,7 @@ resource "azurerm_container_app" "this" {
       transport        = "auto"
       traffic_weight {
         percentage = 100
+        latest_revision = true
       }
     }
   }

@@ -17,6 +17,7 @@ resource "azurerm_container_app" "this" {
       transport        = "auto"
       traffic_weight {
         percentage = 100
+        latest_revision = true
       }
     }
   }
@@ -41,6 +42,11 @@ resource "azurerm_container_app" "this" {
 
   }
 
+  lifecycle {
+    ignore_changes = [
+      template[0].container[0].image
+    ]
+  }
 
 
   identity {

@@ -2,17 +2,6 @@ module "aca_apps" {
   source = "../modules/container_app"
   for_each = {
 
-    nginx = {
-      container_app_name = "nginx"
-      container_name     = "nginx"
-      image              = "nginx:latest"
-      cpu                = 0.5
-      memory             = "1.0Gi"
-      env_variables      = {}
-      ingress_enabled = true
-      target_port     = 80
-    }
-
     zipkin = {
       container_app_name = "zipkin"
       container_name     = "zipkin"
@@ -20,7 +9,7 @@ module "aca_apps" {
       cpu                = 0.5
       memory             = "1.0Gi"
       env_variables      = {}
-      ingress_enabled = true
+      ingress_enabled = false
       target_port     = 9411
     }
 
@@ -31,7 +20,7 @@ module "aca_apps" {
       cpu                = 0.5
       memory             = "1.0Gi"
       env_variables      = {}
-      ingress_enabled = true
+      ingress_enabled = false
       target_port     = 6379
     }
 
@@ -46,7 +35,7 @@ module "aca_apps" {
         "SERVER_PORT" = "8083"
         "ZIPKIN_URL"  = "http://zipkin:80"
       }
-      ingress_enabled = true
+      ingress_enabled = false
       target_port     = 8083
     }
     auth-api = {
@@ -61,7 +50,7 @@ module "aca_apps" {
         "USERS_API_ADDRESS" = "http://users-api:80"
         "ZIPKIN_URL"        = "http://zipkin:80"
       }
-      ingress_enabled = true
+      ingress_enabled = false
       target_port     = 8000
     }
     todos-api = {
@@ -78,7 +67,7 @@ module "aca_apps" {
         "REDIS_CHANNEL" = "log_channel"
         "ZIPKIN_URL"    = "http://zipkin:80"
       }
-      ingress_enabled = true
+      ingress_enabled = false
       target_port     = 8082
     }
     log_processor = {
@@ -93,7 +82,7 @@ module "aca_apps" {
         "REDIS_CHANNEL" = "log_channel"
         "ZIPKIN_URL"    = "http://zipkin:80"
       }
-      ingress_enabled = true
+      ingress_enabled = false
       target_port     = 80
 
     }

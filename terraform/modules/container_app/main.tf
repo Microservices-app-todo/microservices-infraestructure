@@ -13,6 +13,7 @@ resource "azurerm_container_app" "this" {
     for_each = var.ingress_enabled ? [1] : []
     content {
       external_enabled = true
+      allow_insecure_connections = true
       target_port      = var.target_port
       transport        = "auto"
       traffic_weight {

@@ -20,7 +20,7 @@ module "aca_apps" {
       cpu                = 0.5
       memory             = "1.0Gi"
       env_variables      = {}
-      ingress_enabled = true
+      ingress_enabled = false
       target_port     = 9411
     }
 
@@ -31,7 +31,7 @@ module "aca_apps" {
       cpu                = 0.5
       memory             = "1.0Gi"
       env_variables      = {}
-      ingress_enabled = true
+      ingress_enabled = false
       target_port     = 6379
     }
 
@@ -44,9 +44,9 @@ module "aca_apps" {
       env_variables = {
         "JWT_SECRET"  = "PRFT"
         "SERVER_PORT" = "8083"
-        "ZIPKIN_URL"  = "http://zipkin:9411"
+        "ZIPKIN_URL"  = "http://zipkin:80"
       }
-      ingress_enabled = true
+      ingress_enabled = false
       target_port     = 8083
     }
     auth-api = {
@@ -58,8 +58,8 @@ module "aca_apps" {
       env_variables = {
         "JWT_SECRET"        = "PRFT"
         "AUTH_API_PORT"     = "8000"
-        "USERS_API_ADDRESS" = "http://users-api:8083"
-        "ZIPKIN_URL"        = "http://zipkin:9411"
+        "USERS_API_ADDRESS" = "http://users-api:80"
+        "ZIPKIN_URL"        = "http://zipkin:80"
       }
       ingress_enabled = true
       target_port     = 8000
@@ -76,7 +76,7 @@ module "aca_apps" {
         "REDIS_HOST"    = "redis"
         "REDIS_PORT"    = "6379"
         "REDIS_CHANNEL" = "log_channel"
-        "ZIPKIN_URL"    = "http://zipkin:9411"
+        "ZIPKIN_URL"    = "http://zipkin:80"
       }
       ingress_enabled = true
       target_port     = 8082
@@ -91,7 +91,7 @@ module "aca_apps" {
         "REDIS_HOST"    = "redis"
         "REDIS_PORT"    = "6379"
         "REDIS_CHANNEL" = "log_channel"
-        "ZIPKIN_URL"    = "http://zipkin:9411"
+        "ZIPKIN_URL"    = "http://zipkin:80"
       }
       ingress_enabled = true
       target_port     = 80
@@ -105,9 +105,9 @@ module "aca_apps" {
       memory             = "1.0Gi"
       env_variables = {
         "PORT"              = "8080"
-        "AUTH_API_ADDRESS"  = "http://auth-api:8000"
-        "TODOS_API_ADDRESS" = "http://todos-api:8082"
-        "ZIPKIN_URL"        = "http://zipkin:9411"
+        "AUTH_API_ADDRESS"  = "http://auth-api:80"
+        "TODOS_API_ADDRESS" = "http://todos-api:80"
+        "ZIPKIN_URL"        = "http://zipkin:80"
       }
       ingress_enabled = true
       target_port     = 8080

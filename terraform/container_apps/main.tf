@@ -20,7 +20,7 @@ module "aca_apps" {
       cpu                = 0.5
       memory             = "1.0Gi"
       env_variables      = {}
-      ingress_enabled = false
+      ingress_enabled = true
       target_port     = 9411
     }
 
@@ -31,7 +31,7 @@ module "aca_apps" {
       cpu                = 0.5
       memory             = "1.0Gi"
       env_variables      = {}
-      ingress_enabled = false
+      ingress_enabled = true
       target_port     = 6379
     }
 
@@ -46,7 +46,7 @@ module "aca_apps" {
         "SERVER_PORT" = "8083"
         "ZIPKIN_URL"  = "http://zipkin:80"
       }
-      ingress_enabled = false
+      ingress_enabled = true
       target_port     = 8083
     }
     auth-api = {

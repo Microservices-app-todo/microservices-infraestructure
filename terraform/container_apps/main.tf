@@ -126,7 +126,12 @@ module "aca_apps" {
   env_variables                = each.value.env_variables
 }
 
-
+output "container_app_urls" {
+  value = {
+    for app_name, app in module.aca_apps :
+    app_name => app.azurerm_container_app_url
+  }
+}
 
 terraform {
   backend "s3" {

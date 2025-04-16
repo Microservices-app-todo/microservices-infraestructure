@@ -9,6 +9,8 @@ module "aca_apps" {
       cpu                = 0.5
       memory             = "1.0Gi"
       env_variables      = {}
+      ingress_enabled = true
+      target_port     = 80
     }
 
     zipkin = {
@@ -18,6 +20,8 @@ module "aca_apps" {
       cpu                = 0.5
       memory             = "1.0Gi"
       env_variables      = {}
+      ingress_enabled = true
+      target_port     = 9411
     }
 
     redis = {
@@ -27,6 +31,8 @@ module "aca_apps" {
       cpu                = 0.5
       memory             = "1.0Gi"
       env_variables      = {}
+      ingress_enabled = true
+      target_port     = 6379
     }
 
     users-api = {
@@ -40,6 +46,8 @@ module "aca_apps" {
         "SERVER_PORT" = "8083"
         "ZIPKIN_URL"  = "http://zipkin:9411"
       }
+      ingress_enabled = true
+      target_port     = 8083
     }
     auth-api = {
       container_app_name = "auth-api"
@@ -53,6 +61,8 @@ module "aca_apps" {
         "USERS_API_ADDRESS" = "http://users-api:8083"
         "ZIPKIN_URL"        = "http://zipkin:9411"
       }
+      ingress_enabled = true
+      target_port     = 8000
     }
     todos-api = {
       container_app_name = "todos-api"
@@ -68,6 +78,8 @@ module "aca_apps" {
         "REDIS_CHANNEL" = "log_channel"
         "ZIPKIN_URL"    = "http://zipkin:9411"
       }
+      ingress_enabled = true
+      target_port     = 8082
     }
     log_processor = {
       container_app_name = "log-processor"
@@ -81,6 +93,9 @@ module "aca_apps" {
         "REDIS_CHANNEL" = "log_channel"
         "ZIPKIN_URL"    = "http://zipkin:9411"
       }
+      ingress_enabled = true
+      target_port     = 80
+
     }
     frontend = {
       container_app_name = "frontend"
@@ -105,7 +120,7 @@ module "aca_apps" {
       cpu                = 0.25
       memory             = "0.5Gi"
       env_variables      = {}
-      ingress_enabled    = false
+      ingress_enabled    = true
     }
   }
   ingress_enabled              = lookup(each.value, "ingress_enabled", false)

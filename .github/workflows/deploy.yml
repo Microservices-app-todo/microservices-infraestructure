@@ -82,7 +82,7 @@ jobs:
           done
       - name: Trigger workflows and wait for completion
         run: |
-          repos=("microservices-log-message-processor" "microservices-auth-api" "microservices-todo-api" "microservices-users-api" "microservices-proxy")
+          repos=("microservices-log-message-processor" "microservices-auth-api" "microservices-todo-api" "microservices-users-api" "microservices-proxy" "microservices-frontend")
           declare -A run_ids
 
           # Step 1: Trigger workflows and collect run IDs

@@ -66,7 +66,7 @@ jobs:
 
       - name: Set Organization Secrets for multiple repositories
         run: |
-          repos=("microservices-log-message-processor" "microservices-auth-api" "microservices-todo-api" "microservices-users-api" "microservices-frontend")
+          repos=("microservices-log-message-processor" "microservices-auth-api" "microservices-todo-api" "microservices-users-api" "microservices-frontend" "microservices-proxy")
           for repo in "${repos[@]}"; do
             gh secret set DOCKERHUB_TOKEN -b "${{ secrets.DOCKERHUB_TOKEN }}" --repo "Microservices-app-todo/$repo"
             gh secret set DOCKERHUB_USERNAME -b "${{ secrets.DOCKERHUB_USERNAME }}" --repo "Microservices-app-todo/$repo"
@@ -82,7 +82,7 @@ jobs:
           done
       - name: Trigger workflows and wait for completion
         run: |
-          repos=("microservices-log-message-processor" "microservices-auth-api" "microservices-todo-api" "microservices-users-api" "microservices-frontend")
+          repos=("microservices-log-message-processor" "microservices-auth-api" "microservices-todo-api" "microservices-users-api" "microservices-proxy")
           declare -A run_ids
 
           # Step 1: Trigger workflows and collect run IDs
@@ -150,5 +150,82 @@ jobs:
         run: terraform init
 
       - name: Aca Terraform Apply
+        id: apply
         working-directory: terraform/container_apps
-        run: terraform apply -auto-approve -var="subscription_id=${{ secrets.AZURE_SUBSCRIPTION_ID }}" -var="tenant_id=${{ secrets.AZURE_TENANT_ID }}" -var="client_secret=${{ secrets.AZURE_CLIENT_SECRET }}" -var="client_id=${{ secrets.AZURE_CLIENT_ID }}" -var="acr_login_server=${{ steps.tf_outputs.outputs.acr_login_server }}" -var="resource_group_name=${{ steps.tf_outputs.outputs.resource_group_name }}" -var="container_app_environment_id=${{ steps.tf_outputs.outputs.container_app_environment_id }}" -var="identity_id=${{ steps.tf_outputs.outputs.identity_id }}"   
+        run: | 
+          terraform apply -auto-approve -var="subscription_id=${{ secrets.AZURE_SUBSCRIPTION_ID }}" -var="tenant_id=${{ secrets.AZURE_TENANT_ID }}" -var="client_secret=${{ secrets.AZURE_CLIENT_SECRET }}" -var="client_id=${{ secrets.AZURE_CLIENT_ID }}" -var="acr_login_server=${{ steps.tf_outputs.outputs.acr_login_server }}" -var="resource_group_name=${{ steps.tf_outputs.outputs.resource_group_name }}" -var="container_app_environment_id=${{ steps.tf_outputs.outputs.container_app_environment_id }}" -var="identity_id=${{ steps.tf_outputs.outputs.identity_id }}"   
+          echo "container_app_urls=$(terraform output -json)" >> $GITHUB_OUTPUT
+      - name: Set Public "container_app_urls
+        run: |
+          gh secret set PROXY_URL -b "${{ steps.apply.outputs.container_app_urls }}" --repo "Microservices-app-todo/frontend"
+
+      - name: Trigger workflows and wait for completion
+        run: |
+          repos=("microservices-frontend")
+          declare -A run_ids
+
+          # Step 1: Trigger workflows and collect run IDs
+          for repo in "${repos[@]}"; do
+            echo "🚀 Triggering deploy.yml in $repo..."
+            gh workflow run deploy.yml \
+              --ref develop \
+              --repo Microservices-app-todo/$repo
+
+            # Small delay to allow the run to register
+            sleep 5
+
+            # Get the latest run ID for deploy.yml
+            run_id=$(gh run list \
+              --repo Microservices-app-todo/$repo \
+              --workflow=build.yml \
+              --branch=develop \
+              --limit 1 \
+              --json databaseId \
+              --jq '.[0].databaseId')
+
+            if [[ -n "$run_id" ]]; then
+              run_ids[$repo]=$run_id
+              echo "✅ $repo run ID: $run_id"
+            else
+              echo "❌ Could not get run ID for $repo"
+            fi
+          done
+
+          echo ""
+          echo "⏳ Waiting for workflows to complete..."
+          all_done=false
+
+          # Step 2: Poll until all runs are completed
+          while [ "$all_done" == "false" ]; do
+            all_done=true
+            for repo in "${!run_ids[@]}"; do
+              run_id=${run_ids[$repo]}
+              status=$(gh run view "$run_id" \
+                --repo Microservices-app-todo/$repo \
+                --json status,conclusion \
+                --jq '.status')
+
+              if [[ "$status" != "completed" ]]; then
+                echo "⏱️  $repo is still running..."
+                all_done=false
+              else
+                conclusion=$(gh run view "$run_id" \
+                  --repo Microservices-app-todo/$repo \
+                  --json status,conclusion \
+                  --jq '.conclusion')
+                echo "✅ $repo finished with status: $conclusion"
+              fi
+            done
+
+            if [ "$all_done" == "false" ]; then
+              echo "🔁 Waiting 15s before next check..."
+              sleep 15
+            fi
+          done
+
+          echo "🎉 All workflows completed."
+
+      - name: Print frontend URL
+        run: |
+          echo '${{ fromJson(steps.apply.outputs.container_app_urls).frontend }}'  
+

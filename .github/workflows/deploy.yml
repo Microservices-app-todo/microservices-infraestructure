@@ -157,7 +157,7 @@ jobs:
           echo "container_app_urls=$(terraform output -json | jq -c '.container_app_urls.value')" >> $GITHUB_OUTPUT
       - name: Set Public container_app_urls
         run: |
-          gh secret set PROXY_URL -b "${{ fromJson(steps.apply.outputs.container_app_urls).proxy-api }}" --repo "Microservices-app-todo/frontend"
+          gh secret set PROXY_URL -b "${{ fromJson(steps.apply.outputs.container_app_urls).proxy-api }}" --repo "Microservices-app-todo/microservices-frontend"
 
       - name: Trigger workflows and wait for completion
         run: |

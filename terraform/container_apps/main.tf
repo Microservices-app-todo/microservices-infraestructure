@@ -27,7 +27,7 @@ module "aca_apps" {
     redis = {
       container_app_name = "redis"
       container_name     = "redis"
-      image              = "redis:7.2-alpine"
+      image              = "redis:7.0-alpine"
       cpu                = 0.5
       memory             = "1.0Gi"
       env_variables      = {}

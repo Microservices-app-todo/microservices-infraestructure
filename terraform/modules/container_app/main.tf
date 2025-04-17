@@ -52,7 +52,4 @@ resource "azurerm_container_app" "this" {
     type         = "UserAssigned"
     identity_ids = [var.identity_id]
   }
-
-
-
 }

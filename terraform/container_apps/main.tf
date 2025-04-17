@@ -2,6 +2,17 @@ module "aca_apps" {
   source = "../modules/container_app"
   for_each = {
 
+    proxy-api = {
+      container_app_name = "proxy-api"
+      container_name     = "proxy-api"
+      image              = "${var.acr_login_server}/proxy-api:latest"
+      cpu                = 0.5
+      memory             = "1.0Gi"
+      env_variables      = {}
+      ingress_enabled = true
+      target_port     = 8085
+    }
+
     zipkin = {
       container_app_name = "zipkin"
       container_name     = "zipkin"
@@ -63,7 +74,7 @@ module "aca_apps" {
         "JWT_SECRET"    = "PRFT"
         "TODO_API_PORT" = "8082"
         "REDIS_HOST"    = "redis"
-        "REDIS_PORT"    = "6379"
+        "REDIS_PORT"    = "80"
         "REDIS_CHANNEL" = "log_channel"
         "ZIPKIN_URL"    = "http://zipkin:80"
       }
@@ -102,15 +113,6 @@ module "aca_apps" {
       target_port     = 8080
     }
 
-    debugger = {
-      container_app_name = "debugger"
-      container_name     = "debugger"
-      image              = "curlimages/curl:latest"
-      cpu                = 0.25
-      memory             = "0.5Gi"
-      env_variables      = {}
-      ingress_enabled    = true
-    }
   }
   ingress_enabled              = lookup(each.value, "ingress_enabled", false)
   target_port                  = lookup(each.value, "target_port", 80)

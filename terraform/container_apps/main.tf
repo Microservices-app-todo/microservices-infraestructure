@@ -31,7 +31,7 @@ module "aca_apps" {
       cpu                = 0.5
       memory             = "1.0Gi"
       env_variables      = {}
-      ingress_enabled = false
+      ingress_enabled = true
       target_port     = 6379
     }
 

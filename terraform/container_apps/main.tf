@@ -8,9 +8,14 @@ module "aca_apps" {
       image              = "${var.acr_login_server}/proxy-api:latest"
       cpu                = 0.5
       memory             = "1.0Gi"
-      env_variables      = {}
+      env_variables = {
+        "REDIS_HOST" = "redis-gatekeeper"
+        "REDIS_PORT" = "6380"
+        REDIS_DB     = "0"
+      }
       ingress_enabled = true
       target_port     = 8085
+      is_tcp          = false
     }
 
     zipkin = {
@@ -20,8 +25,10 @@ module "aca_apps" {
       cpu                = 0.5
       memory             = "1.0Gi"
       env_variables      = {}
-      ingress_enabled = false
-      target_port     = 9411
+      ingress_enabled    = false
+      target_port        = 9411
+      is_tcp             = false
+
     }
 
     redis = {
@@ -31,8 +38,21 @@ module "aca_apps" {
       cpu                = 0.5
       memory             = "1.0Gi"
       env_variables      = {}
-      ingress_enabled = true
-      target_port     = 6379
+      ingress_enabled    = false
+      target_port        = 6379
+      is_tcp             = true
+    }
+
+    redis-gatekeeper = {
+      container_app_name = "redis-gatekeeper"
+      container_name     = "redis-gatekeeper"
+      image              = "redis:7.0-alpine"
+      cpu                = 0.5
+      memory             = "1.0Gi"
+      env_variables      = {}
+      ingress_enabled    = false
+      target_port        = 6380
+      is_tcp             = true
     }
 
     users-api = {
@@ -48,6 +68,7 @@ module "aca_apps" {
       }
       ingress_enabled = false
       target_port     = 8083
+      is_tcp          = false
     }
     auth-api = {
       container_app_name = "auth-api"
@@ -63,6 +84,7 @@ module "aca_apps" {
       }
       ingress_enabled = false
       target_port     = 8000
+      is_tcp          = false
     }
     todos-api = {
       container_app_name = "todos-api"
@@ -74,12 +96,13 @@ module "aca_apps" {
         "JWT_SECRET"    = "PRFT"
         "TODO_API_PORT" = "8082"
         "REDIS_HOST"    = "redis"
-        "REDIS_PORT"    = "80"
+        "REDIS_PORT"    = "6379"
         "REDIS_CHANNEL" = "log_channel"
         "ZIPKIN_URL"    = "http://zipkin:80"
       }
       ingress_enabled = false
       target_port     = 8082
+      is_tcp          = false
     }
     log_processor = {
       container_app_name = "log-processor"
@@ -95,7 +118,7 @@ module "aca_apps" {
       }
       ingress_enabled = false
       target_port     = 80
-
+      is_tcp          = false
     }
     frontend = {
       container_app_name = "frontend"
@@ -111,9 +134,11 @@ module "aca_apps" {
       }
       ingress_enabled = true
       target_port     = 8080
+      is_tcp          = false
     }
 
   }
+  is_tcp                       = lookup(each.value, "is_tcp", false)
   ingress_enabled              = lookup(each.value, "ingress_enabled", false)
   target_port                  = lookup(each.value, "target_port", 80)
   subscription_id              = var.subscription_id

@@ -72,3 +72,9 @@ variable "target_port" {
   type        = number
   default     = 80
 }
+
+variable "is_tcp" {
+  description = "Whether the app uses TCP or HTTP"
+  type        = bool
+  default     = false
+}

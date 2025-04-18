@@ -10,8 +10,7 @@ module "aca_apps" {
       memory             = "1.0Gi"
       env_variables = {
         "REDIS_HOST" = "redis-gatekeeper"
-        "REDIS_PORT" = "6380"
-        REDIS_DB     = "0"
+        "REDIS_PORT" = "6379"
       }
       ingress_enabled = true
       target_port     = 8085
@@ -51,7 +50,7 @@ module "aca_apps" {
       memory             = "1.0Gi"
       env_variables      = {}
       ingress_enabled    = false
-      target_port        = 6380
+      target_port        = 6379
       is_tcp             = true
     }
 

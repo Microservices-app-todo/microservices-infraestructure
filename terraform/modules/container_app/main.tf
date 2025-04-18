@@ -11,7 +11,7 @@ resource "azurerm_container_app" "this" {
 
   ingress {
     external_enabled           = var.ingress_enabled
-    allow_insecure_connections = var.is_tcp != "tcp" ? true : false
+    allow_insecure_connections = var.is_tcp ? null : true
     target_port                = var.target_port
     transport                  = var.is_tcp ? "tcp" : "auto"
     exposed_port               = var.is_tcp == "tcp" ? var.target_port : null

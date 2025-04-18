@@ -15,7 +15,7 @@ resource "azurerm_container_app" "this" {
     target_port                = var.target_port
     transport                  = var.is_tcp ? "tcp" : "auto"
 
-    dynamic "exposed_port_block" {
+    dynamic "exposed_port" {
       for_each = var.is_tcp ? [1] : []
       content {
         exposed_port = var.target_port

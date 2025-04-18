@@ -10,14 +10,21 @@ resource "azurerm_container_app" "this" {
   }
 
   ingress {
-    external_enabled         = var.ingress_enabled
+    external_enabled           = var.ingress_enabled
     allow_insecure_connections = true
-    target_port              = var.target_port
-    transport                = "auto"
+    target_port                = var.target_port
+    transport                  = var.is_tcp ? "tcp" : "auto"
+
+    dynamic "exposed_port_block" {
+      for_each = var.is_tcp ? [1] : []
+      content {
+        exposed_port = var.target_port
+      }
+    }
 
     traffic_weight {
-      percentage       = 100
-      latest_revision  = true
+      percentage      = 100
+      latest_revision = true
     }
   }
 

@@ -14,13 +14,8 @@ resource "azurerm_container_app" "this" {
     allow_insecure_connections = true
     target_port                = var.target_port
     transport                  = var.is_tcp ? "tcp" : "auto"
+    exposed_port               = var.is_tcp == "tcp" ? var.target_port : null
 
-    dynamic "exposed_port" {
-      for_each = var.is_tcp ? [1] : []
-      content {
-        exposed_port = var.target_port
-      }
-    }
 
     traffic_weight {
       percentage      = 100

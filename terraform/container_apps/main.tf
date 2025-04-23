@@ -54,6 +54,19 @@ module "aca_apps" {
       is_tcp             = true
     }
 
+
+    redis-gatekeeper-two = {
+      container_app_name = "redis-gatekeeper-two"
+      container_name     = "redis-gatekeeper-two"
+      image              = "redis:7.0-alpine"
+      cpu                = 0.5
+      memory             = "1.0Gi"
+      env_variables      = {}
+      ingress_enabled    = false
+      target_port        = 6379
+      is_tcp             = true
+    }
+
     users-api = {
       container_app_name = "users-api"
       container_name     = "users-api"

@@ -1,0 +1,23 @@
+{
+  "name": "microservices-infraestructure",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Microservices-app-todo/microservices-infraestructure.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Microservices-app-todo/microservices-infraestructure/issues"
+  },
+  "homepage": "https://github.com/Microservices-app-todo/microservices-infraestructure#readme",
+  "devDependencies": {
+    "semantic-release": "^24.2.3"
+  }
+}

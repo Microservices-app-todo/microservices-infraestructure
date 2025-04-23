@@ -55,9 +55,9 @@ module "aca_apps" {
     }
 
 
-    redis-gatekeeper2 = {
-      container_app_name = "redis-gatekeeper2"
-      container_name     = "redis-gatekeeper2"
+    redis-gatekeeper-two = {
+      container_app_name = "redis-gatekeeper-two"
+      container_name     = "redis-gatekeeper-two"
       image              = "redis:7.0-alpine"
       cpu                = 0.5
       memory             = "1.0Gi"
